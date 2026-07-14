@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-export function Aurora() {
+export function Aurora({ coverImage }: { coverImage?: string | null }) {
   const stars = useMemo(
     () =>
       Array.from({ length: 90 }, () => ({
@@ -16,6 +16,9 @@ export function Aurora() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0 aurora-bg" />
+      {coverImage && (
+        <div className="absolute inset-0 opacity-40" style={{ backgroundImage: `url(${coverImage})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+      )}
       <div className="aurora-layer absolute inset-[-10%] opacity-70"
         style={{ background: "var(--gradient-aurora)" }} />
       <div className="absolute inset-0">

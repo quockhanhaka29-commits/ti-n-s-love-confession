@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { timeline } from "@/config/timeline";
+import type { TimelineItem } from "@/lib/content.functions";
 
-export function Story() {
+export function Story({ timeline }: { timeline: TimelineItem[] }) {
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-32">
       <div className="mb-20 text-center">

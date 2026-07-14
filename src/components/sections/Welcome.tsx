@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Heart, Sparkles } from "lucide-react";
-import { site } from "@/config/site";
+import type { SiteContent } from "@/lib/content.functions";
 
-export function Welcome({ onStart }: { onStart: () => void }) {
+export function Welcome({ onStart, content }: { onStart: () => void; content: SiteContent }) {
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <motion.div
@@ -11,7 +11,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ duration: 1.2, ease: "easeOut" }}
         className="flex items-center gap-2 text-sm uppercase tracking-[0.4em] text-soft-pink/80"
       >
-        <Sparkles className="h-4 w-4" /> A little film for {site.crushName}
+        <Sparkles className="h-4 w-4" /> A little film for {content.crush_name}
       </motion.div>
 
       <motion.h1
@@ -20,7 +20,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ duration: 1.4, delay: 0.2, ease: "easeOut" }}
         className="mt-8 text-6xl font-light leading-tight text-gradient md:text-8xl"
       >
-        Gửi {site.crushName},
+        {content.welcome_headline}
       </motion.h1>
 
       <motion.p
@@ -29,8 +29,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         transition={{ duration: 1.4, delay: 0.9 }}
         className="mt-6 max-w-xl text-base text-muted-foreground md:text-lg"
       >
-        Có một điều anh muốn nói với em từ lâu. Anh không giỏi diễn đạt bằng lời,
-        nên anh làm cả một website nhỏ — để em cảm nhận, chậm rãi, từng khoảnh khắc.
+        {content.welcome_subtext}
       </motion.p>
 
       <motion.button

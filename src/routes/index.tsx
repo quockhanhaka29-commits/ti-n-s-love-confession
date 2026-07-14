@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { getSiteContent, type SiteContent } from "@/lib/content.functions";
 import { Aurora } from "@/components/Aurora";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { Welcome } from "@/components/sections/Welcome";
@@ -16,12 +18,14 @@ import { FloatingHearts } from "@/components/FloatingHearts";
 import type { DatePlan } from "@/lib/savePlan";
 
 export const Route = createFileRoute("/")({
+  loader: () => getSiteContent(),
   component: Index,
 });
 
 type Stage = "welcome" | "journey" | "yes" | "planner" | "thankyou" | "respect";
 
 function Index() {
+  const content = Route.useLoaderData() as SiteContent;
   const [stage, setStage] = useState<Stage>("welcome");
   const [decisionVisible, setDecisionVisible] = useState(false);
   const [plan, setPlan] = useState<DatePlan | null>(null);
@@ -55,12 +59,12 @@ function Index() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden text-foreground">
-      <Aurora />
+      <Aurora coverImage={content.cover_image_url} />
 
       <AnimatePresence mode="wait">
         {stage === "welcome" && (
           <motion.div key="welcome" exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.6 }}>
-            <Welcome onStart={() => setStage("journey")} />
+            <Welcome onStart={() => setStage("journey")} content={content} />
           </motion.div>
         )}
 
@@ -77,10 +81,10 @@ function Index() {
               <p className="mt-4 max-w-xl text-muted-foreground">Cuộn nhẹ nhàng. Không vội.</p>
             </section>
 
-            <Story />
-            <Gallery />
-            <Letter />
-            <Confession onReveal={() => setDecisionVisible(true)} />
+            <Story timeline={content.timeline} />
+            <Gallery photos={content.photos} />
+            <Letter letterText={content.letter_text} yourName={content.your_name} crushName={content.crush_name} />
+            <Confession onReveal={() => setDecisionVisible(true)} line1={content.confession_line1} line2={content.confession_line2} />
 
             <div ref={decisionRef}>
               {decisionVisible && (
@@ -124,7 +128,7 @@ function Index() {
 
         {stage === "thankyou" && (
           <motion.div key="thankyou" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-            <ThankYou plan={plan} />
+            <ThankYou plan={plan} messengerUrl={content.messenger_url} crushName={content.crush_name} />
           </motion.div>
         )}
 
