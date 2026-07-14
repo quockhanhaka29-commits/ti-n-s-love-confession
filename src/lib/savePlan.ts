@@ -1,4 +1,4 @@
-import { site } from "@/config/site";
+import { createSubmission } from "@/lib/content.functions";
 
 export type DatePlan = {
   date: string;
@@ -13,16 +13,7 @@ export type DatePlan = {
 export async function savePlan(plan: Omit<DatePlan, "timestamp">): Promise<DatePlan> {
   const full: DatePlan = { ...plan, timestamp: new Date().toISOString() };
   try {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("date_plan", JSON.stringify(full));
-    }
-    if (site.saveEndpoint) {
-      await fetch(site.saveEndpoint, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(full),
-      });
-    }
+    await createSubmission({ data: { decision: "yes", ...plan } });
   } catch {
     // ignore — offline first
   }

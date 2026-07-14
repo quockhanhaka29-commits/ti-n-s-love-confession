@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { photos } from "@/config/photos";
 import { PhotoFrame } from "@/components/PhotoFrame";
+import type { PhotoRow } from "@/lib/content.functions";
 
-export function Gallery() {
+export function Gallery({ photos }: { photos: PhotoRow[] }) {
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-32">
       <div className="mb-16 text-center">
@@ -21,7 +21,7 @@ export function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: i * 0.08 }}
           >
-            <PhotoFrame photo={p} />
+            <PhotoFrame photo={{ src: p.url, caption: p.caption ?? undefined, frame: p.frame as any }} />
           </motion.div>
         ))}
       </div>

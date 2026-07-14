@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 import { MessageCircleHeart } from "lucide-react";
-import { site } from "@/config/site";
 import type { DatePlan } from "@/lib/savePlan";
 
-export function ThankYou({ plan }: { plan: DatePlan | null }) {
+export function ThankYou({ plan, messengerUrl, crushName }: { plan: DatePlan | null; messengerUrl: string; crushName: string }) {
   return (
     <section className="relative mx-auto flex min-h-[80vh] max-w-3xl flex-col items-center justify-center px-6 py-24 text-center">
       <motion.div
@@ -15,7 +14,7 @@ export function ThankYou({ plan }: { plan: DatePlan | null }) {
         <div className="text-xs uppercase tracking-[0.4em] text-soft-pink/80">Relationship status</div>
         <div className="mt-3 text-4xl font-light text-gradient md:text-5xl">Accepted ❤️</div>
         <p className="mt-6 text-lg text-muted-foreground">
-          Cảm ơn em, {site.crushName}. Anh đã nhận được kế hoạch hẹn hò của em rồi.
+          Cảm ơn em, {crushName}. Anh đã nhận được kế hoạch hẹn hò của em rồi.
         </p>
         {plan && (
           <div className="mx-auto mt-6 grid max-w-md gap-2 text-left text-sm text-soft-pink/90">
@@ -28,7 +27,7 @@ export function ThankYou({ plan }: { plan: DatePlan | null }) {
         )}
         <p className="mt-6 text-muted-foreground">Giờ mình qua Messenger nhé — anh muốn nghe giọng em cười.</p>
         <a
-          href={site.messengerUrl}
+          href={messengerUrl}
           target="_blank"
           rel="noreferrer"
           className="glow-pink mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink to-secondary px-8 py-3 text-sm font-medium text-primary-foreground"

@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { site } from "@/config/site";
 
-export function Letter() {
+export function Letter({ letterText, yourName, crushName }: { letterText: string; yourName: string; crushName: string }) {
   const [open, setOpen] = useState(false);
   return (
     <section className="relative mx-auto max-w-4xl px-6 py-32 text-center">
@@ -36,18 +35,12 @@ export function Letter() {
               className="glass mx-auto max-w-lg rounded-2xl p-8 text-left"
               style={{ fontFamily: "var(--font-hand)", color: "oklch(0.94 0.05 350)" }}
             >
-              <p className="text-lg leading-relaxed md:text-xl">
-                {site.crushName} thân yêu,
-              </p>
-              <p className="mt-4 text-lg leading-relaxed md:text-xl">
-                Anh không biết bắt đầu từ đâu. Có lẽ là từ ngày anh nhận ra —
-                một ngày không có tin nhắn của em, anh thấy thiếu một điều gì rất khó gọi tên.
-              </p>
-              <p className="mt-4 text-lg leading-relaxed md:text-xl">
-                Em không cần trả lời ngay. Chỉ cần đọc hết những gì anh chuẩn bị cho em ở đây,
-                và biết rằng — em quan trọng với anh nhiều lắm.
-              </p>
-              <p className="mt-6 text-right text-xl">— {site.yourName}</p>
+              {letterText.split(/\n\n+/).map((para, i) => (
+                <p key={i} className={i === 0 ? "text-lg leading-relaxed md:text-xl" : "mt-4 text-lg leading-relaxed md:text-xl whitespace-pre-line"}>
+                  {para}
+                </p>
+              ))}
+              <p className="mt-6 text-right text-xl">— {yourName}</p>
             </motion.article>
           )}
         </AnimatePresence>
