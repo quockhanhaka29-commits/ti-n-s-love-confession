@@ -27,13 +27,14 @@ function loadYTApi(): Promise<any> {
   return ytApiPromise;
 }
 
-export function MusicPlayer({ tracks }: { tracks: TrackRow[] }) {
+export function MusicPlayer({ tracks, autoPlay = false }: { tracks: TrackRow[]; autoPlay?: boolean }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [idx, setIdx] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const autoPlayedRef = useRef(false);
 
   useEffect(() => {
     if (!tracks.length || !containerRef.current) return;
@@ -44,9 +45,15 @@ export function MusicPlayer({ tracks }: { tracks: TrackRow[] }) {
         height: "0",
         width: "0",
         videoId: tracks[0].youtube_id,
-        playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
+        playerVars: { autoplay: autoPlay ? 1 : 0, controls: 0, playsinline: 1 },
         events: {
-          onReady: () => setReady(true),
+          onReady: (e: any) => {
+            setReady(true);
+            if (autoPlay && !autoPlayedRef.current) {
+              autoPlayedRef.current = true;
+              try { e.target.playVideo(); } catch {}
+            }
+          },
           onStateChange: (e: any) => {
             if (e.data === YT.PlayerState.ENDED) next();
             if (e.data === YT.PlayerState.PLAYING) setPlaying(true);
@@ -61,6 +68,12 @@ export function MusicPlayer({ tracks }: { tracks: TrackRow[] }) {
     };
      
   }, [tracks.length]);
+
+  useEffect(() => {
+    if (!autoPlay || !ready || autoPlayedRef.current) return;
+    autoPlayedRef.current = true;
+    try { playerRef.current?.playVideo?.(); } catch {}
+  }, [autoPlay, ready]);
 
   const play = (i: number) => {
     if (!playerRef.current || !tracks[i]) return;
