@@ -57,6 +57,12 @@ function Index() {
     setTimeout(() => setStage("planner"), 1800);
   };
 
+  useEffect(() => {
+    if (stage === "journey" && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, [stage]);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden text-foreground">
       <Aurora coverImage={content.cover_image_url} />
