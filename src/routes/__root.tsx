@@ -81,16 +81,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Một lá thư điện ảnh nhỏ, được viết bằng ánh sáng, âm nhạc và sự chân thành — dành riêng cho Tiên." },
       { name: "author", content: "For Tiên" },
       { property: "og:title", content: "Gửi Tiên — Một điều anh muốn nói" },
-      { property: "og:description", content: "Một lá thư điện ảnh nhỏ, dành riêng cho em." },
+      { property: "og:description", content: "Một lá thư điện ảnh nhỏ, được viết bằng ánh sáng, âm nhạc và sự chân thành — dành riêng cho Tiên." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Gửi Tiên — Một điều anh muốn nói" },
+      { name: "twitter:description", content: "Một lá thư điện ảnh nhỏ, được viết bằng ánh sáng, âm nhạc và sự chân thành — dành riêng cho Tiên." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/63f1f830-18e5-47b5-abae-7d1a55eaae77/id-preview-2ab30a93--f8e6b12c-ee75-4056-837d-a829c1f47b74.lovable.app-1784085458522.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/63f1f830-18e5-47b5-abae-7d1a55eaae77/id-preview-2ab30a93--f8e6b12c-ee75-4056-837d-a829c1f47b74.lovable.app-1784085458522.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
