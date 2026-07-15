@@ -103,7 +103,13 @@ function AdminPage() {
           confession_line1: next.confession_line1,
           confession_line2: next.confession_line2,
           letter_text: next.letter_text,
-          timeline: next.timeline,
+          timeline: next.timeline.map((t) => ({
+            id: t.id,
+            title: t.title,
+            caption: t.caption,
+            quote: t.quote,
+            image_path: t.image_path ?? null,
+          })),
         },
       });
       setMsg("Đã lưu ✓");
@@ -144,6 +150,7 @@ function AdminPage() {
           ["content", "Nội dung"],
           ["cover", "Ảnh bìa"],
           ["photos", `Gallery (${content.photos.length})`],
+          ["music", `Nhạc (${content.tracks.length})`],
           ["subs", `Form của Tiên (${subs.length})`],
         ].map(([k, l]) => (
           <button key={k} onClick={() => setTab(k as any)}
