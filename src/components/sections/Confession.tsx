@@ -1,17 +1,31 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TypingText } from "@/components/TypingText";
 import { FloatingHearts } from "@/components/FloatingHearts";
 
 export function Confession({ onReveal, line1, line2 }: { onReveal: () => void; line1: string; line2: string }) {
   const [stage, setStage] = useState<0 | 1 | 2>(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [inView, setInView] = useState(false);
   useEffect(() => {
+    if (!sectionRef.current) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) setInView(true);
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(sectionRef.current);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!inView) return;
     const t = setTimeout(() => setStage(1), 400);
     return () => clearTimeout(t);
-  }, []);
+  }, [inView]);
 
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-6 py-32 text-center">
+    <section ref={sectionRef} className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-6 py-32 text-center">
       <FloatingHearts count={14} />
       <div className="text-xs uppercase tracking-[0.4em] text-soft-pink/70">Chương IV</div>
       <h2 className="mt-4 text-5xl font-light text-gradient md:text-6xl">Điều anh muốn nói</h2>
