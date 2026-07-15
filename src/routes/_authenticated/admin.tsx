@@ -286,9 +286,6 @@ function AdminPage() {
           </section>
         )}
 
-        {tab === "subs" && (
-          <></>
-        )}
         {tab === "music" && (
           <section className="space-y-4">
             <div className="glass rounded-2xl p-6 space-y-3">
