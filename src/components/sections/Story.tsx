@@ -21,10 +21,14 @@ export function Story({ timeline }: { timeline: TimelineItem[] }) {
               transition={{ duration: 0.9, ease: "easeOut" }}
               className={`grid items-center gap-10 md:grid-cols-2 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}
             >
-              <div className="glass aspect-[4/3] w-full rounded-3xl p-6">
-                <div className="flex h-full items-center justify-center text-center text-soft-pink/70">
-                  ✨ Ảnh cho "{item.title}"
-                </div>
+              <div className="glass aspect-[4/3] w-full overflow-hidden rounded-3xl">
+                {item.image_url ? (
+                  <img src={item.image_url} alt={item.title} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center p-6 text-center text-soft-pink/70">
+                    ✨ Ảnh cho "{item.title}"
+                  </div>
+                )}
               </div>
               <div className="px-2">
                 <div className="text-xs uppercase tracking-[0.35em] text-lavender/80">0{i + 1}</div>

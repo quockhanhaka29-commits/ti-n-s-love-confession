@@ -10,6 +10,8 @@ import {
   listSubmissions,
   deleteSubmission,
   checkIsAdmin,
+  addTrack,
+  deleteTrack,
   type SiteContent,
   type TimelineItem,
 } from "@/lib/content.functions";
@@ -39,13 +41,17 @@ function AdminPage() {
   const removePhoto = useServerFn(deletePhoto);
   const fetchSubs = useServerFn(listSubmissions);
   const removeSub = useServerFn(deleteSubmission);
+  const insertTrack = useServerFn(addTrack);
+  const removeTrack = useServerFn(deleteTrack);
 
-  const [tab, setTab] = useState<"content" | "photos" | "cover" | "subs">("content");
+  const [tab, setTab] = useState<"content" | "photos" | "cover" | "music" | "subs">("content");
   const [content, setContent] = useState<SiteContent | null>(null);
   const [subs, setSubs] = useState<Sub[]>([]);
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [newTrackUrl, setNewTrackUrl] = useState("");
+  const [newTrackTitle, setNewTrackTitle] = useState("");
 
   const load = async () => {
     const c = await fetchContent();
@@ -97,7 +103,13 @@ function AdminPage() {
           confession_line1: next.confession_line1,
           confession_line2: next.confession_line2,
           letter_text: next.letter_text,
-          timeline: next.timeline,
+          timeline: next.timeline.map((t) => ({
+            id: t.id,
+            title: t.title,
+            caption: t.caption,
+            quote: t.quote,
+            image_path: t.image_path ?? null,
+          })),
         },
       });
       setMsg("Đã lưu ✓");
@@ -138,6 +150,7 @@ function AdminPage() {
           ["content", "Nội dung"],
           ["cover", "Ảnh bìa"],
           ["photos", `Gallery (${content.photos.length})`],
+          ["music", `Nhạc (${content.tracks.length})`],
           ["subs", `Form của Tiên (${subs.length})`],
         ].map(([k, l]) => (
           <button key={k} onClick={() => setTab(k as any)}
@@ -186,6 +199,33 @@ function AdminPage() {
                   <input className={cls} placeholder="Tiêu đề" value={t.title} onChange={(e) => update(i, { title: e.target.value })} />
                   <textarea rows={2} className={cls} placeholder="Mô tả" value={t.caption} onChange={(e) => update(i, { caption: e.target.value })} />
                   <input className={cls} placeholder="Câu quote" value={t.quote} onChange={(e) => update(i, { quote: e.target.value })} />
+                  <div className="flex items-center gap-3 pt-1">
+                    {t.image_url ? (
+                      <img src={t.image_url} alt="" className="h-20 w-20 rounded-lg object-cover" />
+                    ) : (
+                      <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-dashed border-white/20 text-xs text-muted-foreground">Chưa có ảnh</div>
+                    )}
+                    <div className="flex flex-col gap-1 text-xs">
+                      <input type="file" accept="image/*" onChange={async (e) => {
+                        const f = e.target.files?.[0]; if (!f) return;
+                        setSaving(true); setMsg("Đang upload ảnh mốc...");
+                        try {
+                          const path = await uploadImage(f);
+                          const timeline = content.timeline.map((x, j) => j === i ? { ...x, image_path: path } : x);
+                          setContent({ ...content, timeline });
+                          await save({ timeline });
+                        } catch (err: any) { setMsg("Lỗi: " + err.message); }
+                        finally { setSaving(false); }
+                      }} />
+                      {t.image_path && (
+                        <button onClick={async () => {
+                          const timeline = content.timeline.map((x, j) => j === i ? { ...x, image_path: null, image_url: null } : x);
+                          setContent({ ...content, timeline });
+                          await save({ timeline });
+                        }} className="self-start text-pink">Xoá ảnh</button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </section>
@@ -246,6 +286,45 @@ function AdminPage() {
           </section>
         )}
 
+        {tab === "music" && (
+          <section className="space-y-4">
+            <div className="glass rounded-2xl p-6 space-y-3">
+              <h2 className="text-lg text-gradient">Thêm bài hát (YouTube)</h2>
+              <p className="text-xs text-muted-foreground">Dán link YouTube (youtube.com/watch?v=... hoặc youtu.be/...). Nhiều bài sẽ phát nối tiếp.</p>
+              <input className={cls} placeholder="https://youtu.be/..." value={newTrackUrl} onChange={(e) => setNewTrackUrl(e.target.value)} />
+              <input className={cls} placeholder="Tên bài (không bắt buộc)" value={newTrackTitle} onChange={(e) => setNewTrackTitle(e.target.value)} />
+              <button
+                disabled={saving || !newTrackUrl}
+                onClick={async () => {
+                  setSaving(true); setMsg(null);
+                  try {
+                    await insertTrack({ data: { youtube_url: newTrackUrl, title: newTrackTitle || null } });
+                    setNewTrackUrl(""); setNewTrackTitle("");
+                    await load(); setMsg("Đã thêm ✓");
+                  } catch (err: any) { setMsg("Lỗi: " + err.message); }
+                  finally { setSaving(false); }
+                }}
+                className="rounded-full bg-gradient-to-r from-pink to-secondary px-5 py-2 text-xs text-primary-foreground disabled:opacity-60"
+              >
+                + Thêm bài
+              </button>
+            </div>
+            <div className="space-y-2">
+              {content.tracks.length === 0 && <p className="text-muted-foreground text-center py-8">Chưa có bài nào.</p>}
+              {content.tracks.map((t, i) => (
+                <div key={t.id} className="glass flex items-center gap-3 rounded-xl p-3">
+                  <img src={`https://i.ytimg.com/vi/${t.youtube_id}/default.jpg`} alt="" className="h-12 w-16 rounded object-cover" />
+                  <div className="flex-1 min-w-0">
+                    <div className="truncate text-sm">{t.title || t.youtube_id}</div>
+                    <a href={t.youtube_url} target="_blank" rel="noreferrer" className="block truncate text-xs text-muted-foreground hover:text-soft-pink">{t.youtube_url}</a>
+                  </div>
+                  <span className="text-xs text-lavender">#{i + 1}</span>
+                  <button onClick={async () => { await removeTrack({ data: { id: t.id } }); await load(); }} className="text-xs text-pink">Xoá</button>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
         {tab === "subs" && (
           <section className="space-y-3">
             {subs.length === 0 && <p className="text-muted-foreground text-center py-8">Chưa có form nào cả. 💤</p>}

@@ -122,6 +122,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tracks: {
+        Row: {
+          created_at: string
+          id: string
+          sort_order: number
+          title: string | null
+          youtube_id: string
+          youtube_url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sort_order?: number
+          title?: string | null
+          youtube_id: string
+          youtube_url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sort_order?: number
+          title?: string | null
+          youtube_id?: string
+          youtube_url?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
