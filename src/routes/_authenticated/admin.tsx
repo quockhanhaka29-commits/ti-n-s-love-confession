@@ -199,6 +199,33 @@ function AdminPage() {
                   <input className={cls} placeholder="Tiêu đề" value={t.title} onChange={(e) => update(i, { title: e.target.value })} />
                   <textarea rows={2} className={cls} placeholder="Mô tả" value={t.caption} onChange={(e) => update(i, { caption: e.target.value })} />
                   <input className={cls} placeholder="Câu quote" value={t.quote} onChange={(e) => update(i, { quote: e.target.value })} />
+                  <div className="flex items-center gap-3 pt-1">
+                    {t.image_url ? (
+                      <img src={t.image_url} alt="" className="h-20 w-20 rounded-lg object-cover" />
+                    ) : (
+                      <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-dashed border-white/20 text-xs text-muted-foreground">Chưa có ảnh</div>
+                    )}
+                    <div className="flex flex-col gap-1 text-xs">
+                      <input type="file" accept="image/*" onChange={async (e) => {
+                        const f = e.target.files?.[0]; if (!f) return;
+                        setSaving(true); setMsg("Đang upload ảnh mốc...");
+                        try {
+                          const path = await uploadImage(f);
+                          const timeline = content.timeline.map((x, j) => j === i ? { ...x, image_path: path } : x);
+                          setContent({ ...content, timeline });
+                          await save({ timeline });
+                        } catch (err: any) { setMsg("Lỗi: " + err.message); }
+                        finally { setSaving(false); }
+                      }} />
+                      {t.image_path && (
+                        <button onClick={async () => {
+                          const timeline = content.timeline.map((x, j) => j === i ? { ...x, image_path: null, image_url: null } : x);
+                          setContent({ ...content, timeline });
+                          await save({ timeline });
+                        }} className="self-start text-pink">Xoá ảnh</button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </section>
