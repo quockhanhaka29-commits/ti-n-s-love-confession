@@ -139,7 +139,7 @@ function Index() {
         )}
       </AnimatePresence>
 
-      {started && <MusicPlayer tracks={content.tracks} />}
+      {started && <MusicPlayer tracks={content.tracks} autoPlay />}
     </div>
   );
 }
