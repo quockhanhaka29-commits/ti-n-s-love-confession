@@ -10,6 +10,8 @@ import {
   listSubmissions,
   deleteSubmission,
   checkIsAdmin,
+  addTrack,
+  deleteTrack,
   type SiteContent,
   type TimelineItem,
 } from "@/lib/content.functions";
@@ -39,13 +41,17 @@ function AdminPage() {
   const removePhoto = useServerFn(deletePhoto);
   const fetchSubs = useServerFn(listSubmissions);
   const removeSub = useServerFn(deleteSubmission);
+  const insertTrack = useServerFn(addTrack);
+  const removeTrack = useServerFn(deleteTrack);
 
-  const [tab, setTab] = useState<"content" | "photos" | "cover" | "subs">("content");
+  const [tab, setTab] = useState<"content" | "photos" | "cover" | "music" | "subs">("content");
   const [content, setContent] = useState<SiteContent | null>(null);
   const [subs, setSubs] = useState<Sub[]>([]);
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [newTrackUrl, setNewTrackUrl] = useState("");
+  const [newTrackTitle, setNewTrackTitle] = useState("");
 
   const load = async () => {
     const c = await fetchContent();
