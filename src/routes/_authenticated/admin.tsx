@@ -190,6 +190,14 @@ function AdminPage() {
             </section>
 
             <section className="glass rounded-2xl p-6 space-y-3">
+              <h2 className="text-lg text-gradient">Form buổi hẹn (khi em ấy đồng ý)</h2>
+              <div><label className={label}>Chương / Nhãn nhỏ</label><input className={cls} value={content.planner_eyebrow} onChange={(e) => setContent({ ...content, planner_eyebrow: e.target.value })} /></div>
+              <div><label className={label}>Tiêu đề</label><textarea rows={2} className={cls} value={content.planner_title} onChange={(e) => setContent({ ...content, planner_title: e.target.value })} /></div>
+              <div><label className={label}>Mô tả phụ</label><textarea rows={2} className={cls} value={content.planner_subtitle} onChange={(e) => setContent({ ...content, planner_subtitle: e.target.value })} /></div>
+              <p className="text-xs text-muted-foreground">Gợi ý: "Cảm ơn em vì đã đồng ý." cho tiêu đề, "Có lẽ đây là ngày mà anh sẽ nhớ rất lâu. Cho anh hẹn em 1 buổi dating nhaa" cho mô tả.</p>
+            </section>
+
+            <section className="glass rounded-2xl p-6 space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg text-gradient">Timeline câu chuyện</h2>
                 <button onClick={() => setContent({ ...content, timeline: [...content.timeline, { id: crypto.randomUUID(), title: "", caption: "", quote: "" }] })}
