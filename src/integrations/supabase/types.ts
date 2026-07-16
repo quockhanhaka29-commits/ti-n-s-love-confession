@@ -50,6 +50,9 @@ export type Database = {
           id: number
           letter_text: string
           messenger_url: string
+          planner_eyebrow: string
+          planner_subtitle: string
+          planner_title: string
           timeline: Json
           updated_at: string
           welcome_headline: string
@@ -64,6 +67,9 @@ export type Database = {
           id?: number
           letter_text?: string
           messenger_url?: string
+          planner_eyebrow?: string
+          planner_subtitle?: string
+          planner_title?: string
           timeline?: Json
           updated_at?: string
           welcome_headline?: string
@@ -78,6 +84,9 @@ export type Database = {
           id?: number
           letter_text?: string
           messenger_url?: string
+          planner_eyebrow?: string
+          planner_subtitle?: string
+          planner_title?: string
           timeline?: Json
           updated_at?: string
           welcome_headline?: string
@@ -96,6 +105,7 @@ export type Database = {
           id: string
           location: string | null
           note: string | null
+          reply_letter: string
           time: string | null
         }
         Insert: {
@@ -107,6 +117,7 @@ export type Database = {
           id?: string
           location?: string | null
           note?: string | null
+          reply_letter?: string
           time?: string | null
         }
         Update: {
@@ -118,6 +129,7 @@ export type Database = {
           id?: string
           location?: string | null
           note?: string | null
+          reply_letter?: string
           time?: string | null
         }
         Relationships: []
