@@ -29,6 +29,7 @@ type Sub = {
   food: string | null;
   drink: string | null;
   note: string | null;
+  reply_letter: string | null;
   created_at: string;
 };
 
@@ -103,6 +104,9 @@ function AdminPage() {
           confession_line1: next.confession_line1,
           confession_line2: next.confession_line2,
           letter_text: next.letter_text,
+          planner_eyebrow: next.planner_eyebrow,
+          planner_title: next.planner_title,
+          planner_subtitle: next.planner_subtitle,
           timeline: next.timeline.map((t) => ({
             id: t.id,
             title: t.title,
