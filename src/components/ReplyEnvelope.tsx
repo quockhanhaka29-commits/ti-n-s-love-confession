@@ -36,7 +36,7 @@ export function ReplyEnvelope({ onSubmit, initial = "", submitLabel = "Gửi cho
   return (
     <>
       {/* Floating envelope */}
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2 md:bottom-8 md:right-8">
+      <div className="fixed bottom-6 left-4 z-40 flex flex-col items-start gap-2 md:bottom-8 md:left-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={showSecond ? "b" : "a"}
@@ -44,7 +44,7 @@ export function ReplyEnvelope({ onSubmit, initial = "", submitLabel = "Gửi cho
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.5 }}
-            className="max-w-[220px] rounded-2xl bg-black/40 px-3 py-2 text-right text-[11px] leading-relaxed text-soft-pink backdrop-blur-md md:text-xs"
+            className="max-w-[200px] rounded-2xl bg-black/40 px-3 py-2 text-left text-[11px] leading-relaxed text-soft-pink backdrop-blur-md md:max-w-[220px] md:text-xs"
           >
             {showSecond ? (
               <>Nếu em muốn... <br />Em có thể viết vài dòng cho anh ở đây ✨</>
