@@ -35,6 +35,9 @@ export function MusicPlayer({ tracks, autoPlay = false }: { tracks: TrackRow[]; 
   const [idx, setIdx] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const autoPlayedRef = useRef(false);
+  const idxRef = useRef(0);
+  const tracksRef = useRef(tracks);
+  useEffect(() => { tracksRef.current = tracks; }, [tracks]);
 
   useEffect(() => {
     if (!tracks.length || !containerRef.current) return;
@@ -55,7 +58,17 @@ export function MusicPlayer({ tracks, autoPlay = false }: { tracks: TrackRow[]; 
             }
           },
           onStateChange: (e: any) => {
-            if (e.data === YT.PlayerState.ENDED) next();
+            if (e.data === YT.PlayerState.ENDED) {
+              const list = tracksRef.current;
+              if (!list.length) return;
+              const nextIdx = (idxRef.current + 1) % list.length;
+              idxRef.current = nextIdx;
+              setIdx(nextIdx);
+              try {
+                playerRef.current.loadVideoById(list[nextIdx].youtube_id);
+                playerRef.current.playVideo();
+              } catch {}
+            }
             if (e.data === YT.PlayerState.PLAYING) setPlaying(true);
             if (e.data === YT.PlayerState.PAUSED) setPlaying(false);
           },
@@ -77,6 +90,7 @@ export function MusicPlayer({ tracks, autoPlay = false }: { tracks: TrackRow[]; 
 
   const play = (i: number) => {
     if (!playerRef.current || !tracks[i]) return;
+    idxRef.current = i;
     setIdx(i);
     playerRef.current.loadVideoById(tracks[i].youtube_id);
     playerRef.current.playVideo();
