@@ -31,6 +31,9 @@ export type SiteContent = {
   confession_line1: string;
   confession_line2: string;
   letter_text: string;
+  planner_eyebrow: string;
+  planner_title: string;
+  planner_subtitle: string;
   timeline: TimelineItem[];
   photos: PhotoRow[];
   tracks: TrackRow[];
@@ -105,6 +108,9 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     confession_line1: site?.confession_line1 ?? "Anh thích em.",
     confession_line2: site?.confession_line2 ?? "Em có đồng ý làm người yêu anh không?",
     letter_text: site?.letter_text ?? "",
+    planner_eyebrow: site?.planner_eyebrow ?? "Chương V",
+    planner_title: site?.planner_title ?? "Buổi hẹn đầu tiên",
+    planner_subtitle: site?.planner_subtitle ?? "Em chọn — anh lo phần còn lại.",
     timeline: signedTimeline,
     photos: signedPhotos,
     tracks: (tracks ?? []).map((t: any) => ({
@@ -127,6 +133,9 @@ const siteUpdateSchema = z.object({
   confession_line1: z.string().min(1).max(200),
   confession_line2: z.string().min(1).max(200),
   letter_text: z.string().max(5000),
+  planner_eyebrow: z.string().max(60),
+  planner_title: z.string().min(1).max(200),
+  planner_subtitle: z.string().max(500),
   timeline: z.array(z.object({
     id: z.string().min(1).max(60),
     title: z.string().min(1).max(120),
@@ -229,6 +238,7 @@ const submissionSchema = z.object({
   food: z.string().max(200).optional().default(""),
   drink: z.string().max(200).optional().default(""),
   note: z.string().max(1000).optional().default(""),
+  reply_letter: z.string().max(3000).optional().default(""),
 });
 
 export const createSubmission = createServerFn({ method: "POST" })
