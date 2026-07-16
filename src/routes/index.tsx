@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { getSiteContent, type SiteContent } from "@/lib/content.functions";
 import { Aurora } from "@/components/Aurora";
 import { MusicPlayer } from "@/components/MusicPlayer";
@@ -15,7 +14,8 @@ import { DatePlanner } from "@/components/sections/DatePlanner";
 import { ThankYou } from "@/components/sections/ThankYou";
 import { Respect } from "@/components/sections/Respect";
 import { FloatingHearts } from "@/components/FloatingHearts";
-import type { DatePlan } from "@/lib/savePlan";
+import { saveReplyOnly, type DatePlan } from "@/lib/savePlan";
+import { ReplyEnvelope } from "@/components/ReplyEnvelope";
 
 export const Route = createFileRoute("/")({
   loader: () => getSiteContent(),
@@ -29,6 +29,7 @@ function Index() {
   const [stage, setStage] = useState<Stage>("welcome");
   const [decisionVisible, setDecisionVisible] = useState(false);
   const [plan, setPlan] = useState<DatePlan | null>(null);
+  const [replyLetter, setReplyLetter] = useState("");
   const decisionRef = useRef<HTMLDivElement>(null);
   const started = stage !== "welcome";
 
@@ -124,6 +125,10 @@ function Index() {
         {stage === "planner" && (
           <motion.div key="planner" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
             <DatePlanner
+              eyebrow={content.planner_eyebrow}
+              title={content.planner_title}
+              subtitle={content.planner_subtitle}
+              replyLetter={replyLetter}
               onSaved={(p) => {
                 setPlan(p);
                 setStage("thankyou");
@@ -134,7 +139,7 @@ function Index() {
 
         {stage === "thankyou" && (
           <motion.div key="thankyou" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-            <ThankYou plan={plan} messengerUrl={content.messenger_url} crushName={content.crush_name} />
+            <ThankYou plan={plan} messengerUrl={content.messenger_url} crushName={content.crush_name} replyLetter={replyLetter} />
           </motion.div>
         )}
 
@@ -146,6 +151,20 @@ function Index() {
       </AnimatePresence>
 
       {started && <MusicPlayer tracks={content.tracks} autoPlay />}
+
+      {stage === "planner" && (
+        <ReplyEnvelope
+          initial={replyLetter}
+          submitLabel="Lưu vào form"
+          sentLabel="Đã lưu ✓"
+          onSubmit={(t) => { setReplyLetter(t); }}
+        />
+      )}
+      {stage === "respect" && (
+        <ReplyEnvelope
+          onSubmit={async (t) => { await saveReplyOnly("later", t); }}
+        />
+      )}
     </div>
   );
 }

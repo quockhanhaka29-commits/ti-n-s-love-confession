@@ -29,6 +29,7 @@ type Sub = {
   food: string | null;
   drink: string | null;
   note: string | null;
+  reply_letter: string | null;
   created_at: string;
 };
 
@@ -103,6 +104,9 @@ function AdminPage() {
           confession_line1: next.confession_line1,
           confession_line2: next.confession_line2,
           letter_text: next.letter_text,
+          planner_eyebrow: next.planner_eyebrow,
+          planner_title: next.planner_title,
+          planner_subtitle: next.planner_subtitle,
           timeline: next.timeline.map((t) => ({
             id: t.id,
             title: t.title,
@@ -183,6 +187,14 @@ function AdminPage() {
               <h2 className="text-lg text-gradient">Lá thư</h2>
               <textarea rows={10} className={cls + " font-serif"} value={content.letter_text} onChange={(e) => setContent({ ...content, letter_text: e.target.value })} />
               <p className="text-xs text-muted-foreground">Xuống dòng bằng Enter. Sẽ hiện dạng thư viết tay.</p>
+            </section>
+
+            <section className="glass rounded-2xl p-6 space-y-3">
+              <h2 className="text-lg text-gradient">Form buổi hẹn (khi em ấy đồng ý)</h2>
+              <div><label className={label}>Chương / Nhãn nhỏ</label><input className={cls} value={content.planner_eyebrow} onChange={(e) => setContent({ ...content, planner_eyebrow: e.target.value })} /></div>
+              <div><label className={label}>Tiêu đề</label><textarea rows={2} className={cls} value={content.planner_title} onChange={(e) => setContent({ ...content, planner_title: e.target.value })} /></div>
+              <div><label className={label}>Mô tả phụ</label><textarea rows={2} className={cls} value={content.planner_subtitle} onChange={(e) => setContent({ ...content, planner_subtitle: e.target.value })} /></div>
+              <p className="text-xs text-muted-foreground">Gợi ý: "Cảm ơn em vì đã đồng ý." cho tiêu đề, "Có lẽ đây là ngày mà anh sẽ nhớ rất lâu. Cho anh hẹn em 1 buổi dating nhaa" cho mô tả.</p>
             </section>
 
             <section className="glass rounded-2xl p-6 space-y-3">
@@ -344,6 +356,12 @@ function AdminPage() {
                 {s.food && <div className="text-sm"><span className="text-lavender">Món:</span> {s.food}</div>}
                 {s.drink && <div className="text-sm"><span className="text-lavender">Uống:</span> {s.drink}</div>}
                 {s.note && <div className="text-sm border-l-2 border-pink/60 pl-3 mt-2 italic">{s.note}</div>}
+                {s.reply_letter && (
+                  <div className="mt-3 rounded-lg border border-pink/30 bg-pink/5 p-3">
+                    <div className="text-xs uppercase tracking-widest text-lavender mb-1">💌 Thư em ấy gửi</div>
+                    <p className="whitespace-pre-line font-serif text-sm text-soft-pink">{s.reply_letter}</p>
+                  </div>
+                )}
               </div>
             ))}
           </section>
