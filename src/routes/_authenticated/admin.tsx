@@ -356,6 +356,12 @@ function AdminPage() {
                 {s.food && <div className="text-sm"><span className="text-lavender">Món:</span> {s.food}</div>}
                 {s.drink && <div className="text-sm"><span className="text-lavender">Uống:</span> {s.drink}</div>}
                 {s.note && <div className="text-sm border-l-2 border-pink/60 pl-3 mt-2 italic">{s.note}</div>}
+                {s.reply_letter && (
+                  <div className="mt-3 rounded-lg border border-pink/30 bg-pink/5 p-3">
+                    <div className="text-xs uppercase tracking-widest text-lavender mb-1">💌 Thư em ấy gửi</div>
+                    <p className="whitespace-pre-line font-serif text-sm text-soft-pink">{s.reply_letter}</p>
+                  </div>
+                )}
               </div>
             ))}
           </section>
