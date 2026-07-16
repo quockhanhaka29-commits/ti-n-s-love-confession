@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { MessageCircleHeart } from "lucide-react";
 import type { DatePlan } from "@/lib/savePlan";
 
-export function ThankYou({ plan, messengerUrl, crushName }: { plan: DatePlan | null; messengerUrl: string; crushName: string }) {
+export function ThankYou({ plan, messengerUrl, crushName, replyLetter }: { plan: DatePlan | null; messengerUrl: string; crushName: string; replyLetter?: string }) {
   return (
     <section className="relative mx-auto flex min-h-[80vh] max-w-3xl flex-col items-center justify-center px-6 py-24 text-center">
       <motion.div
@@ -23,6 +23,12 @@ export function ThankYou({ plan, messengerUrl, crushName }: { plan: DatePlan | n
             <div><span className="text-lavender">Món:</span> {plan.food}</div>
             <div><span className="text-lavender">Uống:</span> {plan.drink}</div>
             {plan.note && <div><span className="text-lavender">Ghi chú:</span> {plan.note}</div>}
+          </div>
+        )}
+        {replyLetter && (
+          <div className="mx-auto mt-6 max-w-md rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+            <div className="text-xs uppercase tracking-widest text-lavender">Thư em gửi anh</div>
+            <p className="mt-2 whitespace-pre-line font-serif text-sm text-soft-pink/90">{replyLetter}</p>
           </div>
         )}
         <p className="mt-6 text-muted-foreground">Giờ mình qua Messenger nhé — anh muốn nghe giọng em cười.</p>
