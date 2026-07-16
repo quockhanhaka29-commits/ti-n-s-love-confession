@@ -3,7 +3,15 @@ import { useState } from "react";
 import { plannerOptions } from "@/config/planner";
 import { savePlan, type DatePlan } from "@/lib/savePlan";
 
-export function DatePlanner({ onSaved }: { onSaved: (plan: DatePlan) => void }) {
+type Props = {
+  onSaved: (plan: DatePlan) => void;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  replyLetter: string;
+};
+
+export function DatePlanner({ onSaved, eyebrow, title, subtitle, replyLetter }: Props) {
   const [form, setForm] = useState({
     date: "",
     time: "",
@@ -19,7 +27,7 @@ export function DatePlanner({ onSaved }: { onSaved: (plan: DatePlan) => void }) 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    const saved = await savePlan(form);
+    const saved = await savePlan({ ...form, reply_letter: replyLetter });
     setSaving(false);
     onSaved(saved);
   };
@@ -29,9 +37,9 @@ export function DatePlanner({ onSaved }: { onSaved: (plan: DatePlan) => void }) 
   return (
     <section className="relative mx-auto max-w-3xl px-6 py-24">
       <div className="mb-10 text-center">
-        <div className="text-xs uppercase tracking-[0.4em] text-soft-pink/70">Chương V</div>
-        <h2 className="mt-4 text-5xl font-light text-gradient md:text-6xl">Buổi hẹn đầu tiên</h2>
-        <p className="mt-3 text-muted-foreground">Em chọn — anh lo phần còn lại.</p>
+        {eyebrow && <div className="text-xs uppercase tracking-[0.4em] text-soft-pink/70">{eyebrow}</div>}
+        <h2 className="mt-4 whitespace-pre-line text-4xl font-light text-gradient md:text-5xl">{title}</h2>
+        {subtitle && <p className="mt-3 whitespace-pre-line text-muted-foreground">{subtitle}</p>}
       </div>
 
       <motion.form
