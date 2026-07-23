@@ -7,28 +7,20 @@ export function Welcome({ onStart, content }: { onStart: () => void; content: Si
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
       {/* Apology frame — top right */}
-      <motion.div
-        initial={{ x: 30 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 1, delay: 1.6, ease: "easeOut" }}
-        className="glass glow-pink absolute top-4 right-3 z-20 flex max-w-[9.5rem] flex-col items-center gap-2 rounded-2xl p-2.5 opacity-100 sm:top-6 sm:right-5 sm:max-w-[11rem] sm:p-3 md:max-w-[13rem]"
-      >
-        <motion.div
-          animate={{ scale: [1, 1.03, 1] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative overflow-hidden rounded-xl"
-        >
+      <div className="animate-apology-enter glass glow-pink absolute top-4 right-3 z-20 flex max-w-[9.5rem] flex-col items-center gap-2 rounded-2xl p-2.5 sm:top-6 sm:right-5 sm:max-w-[11rem] sm:p-3 md:max-w-[13rem]">
+        <div className="animate-pulse relative overflow-hidden rounded-xl">
           <img
             src={nanNiCat.url}
             alt="Mèo năn nỉ xin lỗi"
             className="h-16 w-full object-cover sm:h-20 md:h-24"
           />
           <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
-        </motion.div>
+        </div>
         <p className="text-[10px] leading-relaxed font-medium text-soft-pink/95 sm:text-xs">
           Nếu a có hành động bồng bột sai ở đâu khiến e buồn =((( mà e có chui vào đây xem lại thì cho a xin lỗi nhoa, cũng đừng rời xa khỏi vòng tay a nhaa💜 a nhớ thương e nhìu lắm...
         </p>
-      </motion.div>
+      </div>
+
 
 
       <motion.div
