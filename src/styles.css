@@ -209,3 +209,10 @@
 .animate-float { animation: float-slow 6s ease-in-out infinite; }
 .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
 .aurora-layer { animation: aurora-shift 18s ease-in-out infinite; }
+
+@keyframes apology-enter {
+  from { opacity: 0.5; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-apology-enter { animation: apology-enter 0.9s ease-out 1.4s both; }
+
