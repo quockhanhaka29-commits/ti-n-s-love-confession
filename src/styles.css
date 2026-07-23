@@ -222,4 +222,11 @@
 }
 .animate-glow-pulse-soft { animation: glow-pulse-soft 2.6s ease-in-out infinite; }
 
+@keyframes apology-sway {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+.animate-apology-sway { animation: apology-sway 4s ease-in-out infinite; }
+
+
 

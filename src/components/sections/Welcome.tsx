@@ -7,19 +7,20 @@ export function Welcome({ onStart, content }: { onStart: () => void; content: Si
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
       {/* Apology frame — top right */}
-      <div className="animate-apology-enter glass animate-glow-pulse-soft absolute top-3 right-2 z-20 flex max-w-[9.5rem] flex-col items-center gap-1.5 rounded-2xl p-2 sm:top-4 sm:right-3 sm:max-w-[11rem] sm:gap-2 sm:p-2.5 md:max-w-[12.5rem]">
-        <div className="relative overflow-hidden rounded-xl bg-soft-pink/10">
+      <div className="animate-apology-enter animate-apology-sway animate-glow-pulse-soft absolute top-3 right-2 z-20 flex max-w-[9.5rem] flex-col items-center gap-1.5 rounded-2xl bg-white/95 p-2 shadow-lg shadow-black/10 ring-1 ring-black/5 backdrop-blur-sm sm:top-4 sm:right-3 sm:max-w-[11rem] sm:gap-2 sm:p-2.5 md:max-w-[12.5rem]">
+        <div className="relative overflow-hidden rounded-xl bg-pink-50">
           <img
             src={nanNiCat.url}
             alt="Mèo năn nỉ xin lỗi"
             className="h-20 w-full object-contain sm:h-24 md:h-28"
           />
-          <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
+          <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-black/10" />
         </div>
-        <p className="text-[10px] leading-snug font-medium text-soft-pink/95 sm:text-[11px]">
-          Nếu a có hành động bồng bột sai ở đâu khiến e buồn =((( mà e có chui vào đây xem lại thì cho a xin lỗi nhoa, cũng đừng rời xa khỏi vòng tay a nhaa💜 a nhớ thương e nhìu lắm...
+        <p className="text-[10px] leading-snug font-medium text-slate-900 sm:text-[11px]">
+          Nếu nỡ 1 ngày a có hành động bồng bột sai ở đâu khiến e buồn =((( mà e có chui vào đây xem lại thì cho a xin lỗi nhoa, cũng đừng rời xa khỏi vòng tay a nhaa💜a nhớ thương Tiên nhìu lắmmm...
         </p>
       </div>
+
 
 
 
