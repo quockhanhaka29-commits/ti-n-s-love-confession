@@ -182,6 +182,24 @@ export type Database = {
         }
         Relationships: []
       }
+      visits: {
+        Row: {
+          created_at: string
+          device: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          device?: string | null
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          device?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
