@@ -164,6 +164,7 @@ function AdminPage() {
           ["photos", `Gallery (${content.photos.length})`],
           ["music", `Nhạc (${content.tracks.length})`],
           ["subs", `Form của Tiên (${subs.length})`],
+          ["visits", `Lượt xem (${visits.length})`],
         ].map(([k, l]) => (
           <button key={k} onClick={() => setTab(k as any)}
             className={`rounded-full px-4 py-2 text-xs ${tab === k ? "bg-gradient-to-r from-pink to-secondary text-primary-foreground" : "bg-white/5 text-muted-foreground"}`}>
