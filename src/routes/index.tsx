@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { getSiteContent, type SiteContent } from "@/lib/content.functions";
+import { getSiteContent, logVisit, type SiteContent } from "@/lib/content.functions";
 import { Aurora } from "@/components/Aurora";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { Welcome } from "@/components/sections/Welcome";
