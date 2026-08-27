@@ -12,8 +12,11 @@ import {
   checkIsAdmin,
   addTrack,
   deleteTrack,
+  listVisits,
+  clearVisits,
   type SiteContent,
   type TimelineItem,
+  type VisitRow,
 } from "@/lib/content.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
