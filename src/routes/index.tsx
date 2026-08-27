@@ -64,6 +64,21 @@ function Index() {
     }
   }, [stage]);
 
+  // Log a visit once per browser session
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const KEY = "lovelog_visited";
+    try {
+      if (sessionStorage.getItem(KEY)) return;
+      sessionStorage.setItem(KEY, "1");
+    } catch {
+      return;
+    }
+    const ua = navigator.userAgent;
+    const device = /Mobi|Android/i.test(ua) ? "mobile" : /iPad|Tablet/i.test(ua) ? "tablet" : "desktop";
+    logVisit({ data: { device } }).catch(() => {});
+  }, []);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden text-foreground">
       <Aurora coverImage={content.cover_image_url} />
