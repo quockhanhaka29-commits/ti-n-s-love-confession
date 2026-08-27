@@ -47,8 +47,10 @@ function AdminPage() {
   const removeSub = useServerFn(deleteSubmission);
   const insertTrack = useServerFn(addTrack);
   const removeTrack = useServerFn(deleteTrack);
+  const fetchVisits = useServerFn(listVisits);
+  const wipeVisits = useServerFn(clearVisits);
 
-  const [tab, setTab] = useState<"content" | "photos" | "cover" | "music" | "subs">("content");
+  const [tab, setTab] = useState<"content" | "photos" | "cover" | "music" | "subs" | "visits">("content");
   const [content, setContent] = useState<SiteContent | null>(null);
   const [subs, setSubs] = useState<Sub[]>([]);
   const [allowed, setAllowed] = useState<boolean | null>(null);
@@ -56,6 +58,7 @@ function AdminPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [newTrackUrl, setNewTrackUrl] = useState("");
   const [newTrackTitle, setNewTrackTitle] = useState("");
+  const [visits, setVisits] = useState<VisitRow[]>([]);
 
   const load = async () => {
     const c = await fetchContent();
