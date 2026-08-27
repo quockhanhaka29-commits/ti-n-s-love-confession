@@ -279,3 +279,48 @@ export const checkIsAdmin = createServerFn({ method: "GET" })
     const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
     return { isAdmin: Boolean(data) };
   });
+
+// ============= Visit tracking =============
+
+export type VisitRow = {
+  id: string;
+  device: string | null;
+  created_at: string;
+};
+
+const logVisitSchema = z.object({
+  device: z.enum(["mobile", "desktop", "tablet"]).optional(),
+});
+
+export const logVisit = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => logVisitSchema.parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("visits").insert({ device: data.device ?? null });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const listVisits = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
+      .from("visits")
+      .select("id, device, created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as VisitRow[];
+  });
+
+export const clearVisits = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("visits").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
