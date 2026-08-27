@@ -65,6 +65,8 @@ function AdminPage() {
     setContent(c);
     const s = await fetchSubs();
     setSubs(s as Sub[]);
+    const v = await fetchVisits();
+    setVisits(v);
   };
 
   useEffect(() => {
