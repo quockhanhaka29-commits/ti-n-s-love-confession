@@ -375,6 +375,60 @@ function AdminPage() {
             ))}
           </section>
         )}
+        {tab === "visits" && (
+          <section className="space-y-4">
+            <div className="glass rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="text-3xl text-gradient font-light">{visits.length}</div>
+                <div className="text-xs text-muted-foreground">tổng lượt truy cập (100 gần nhất)</div>
+              </div>
+              <div>
+                {visits.length > 0 ? (
+                  <div className="text-sm">
+                    <span className="text-lavender">Lần cuối:</span>{" "}
+                    {new Date(visits[0].created_at).toLocaleString("vi-VN")}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground">Chưa ai vào xem. 💤</div>
+                )}
+              </div>
+              {visits.length > 0 && (
+                <button
+                  disabled={saving}
+                  onClick={async () => {
+                    setSaving(true);
+                    try {
+                      await wipeVisits();
+                      await load();
+                      setMsg("Đã xoá lịch sử ✓");
+                    } catch (e: any) { setMsg("Lỗi: " + e.message); }
+                    finally { setSaving(false); }
+                  }}
+                  className="rounded-full border border-pink/40 px-4 py-2 text-xs text-pink disabled:opacity-60"
+                >
+                  Xoá lịch sử
+                </button>
+              )}
+            </div>
+            <div className="space-y-2">
+              {visits.map((v) => (
+                <div key={v.id} className="glass flex items-center justify-between rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">
+                      {v.device === "mobile" ? "📱" : v.device === "tablet" ? "📲" : "💻"}
+                    </span>
+                    <div>
+                      <div className="text-sm">
+                        {v.device === "mobile" ? "Điện thoại" : v.device === "tablet" ? "Máy tính bảng" : v.device === "desktop" ? "Máy tính" : "Không xác định"}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{new Date(v.created_at).toLocaleString("vi-VN")}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
