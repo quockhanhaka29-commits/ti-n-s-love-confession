@@ -13,10 +13,10 @@ function seeded(seed: number) {
 export function Aurora({ coverImage }: { coverImage?: string | null }) {
   const stars = useMemo(() => {
     const rnd = seeded(20260917);
-    return Array.from({ length: 36 }, () => ({
+    return Array.from({ length: 90 }, () => ({
       left: +(rnd() * 100).toFixed(3),
       top: +(rnd() * 100).toFixed(3),
-      size: +(rnd() * 2 + 0.6).toFixed(2),
+      size: +(rnd() * 2 + 0.5).toFixed(2),
       delay: +(rnd() * 4).toFixed(2),
       dur: +(2 + rnd() * 4).toFixed(2),
     }));
@@ -30,7 +30,7 @@ export function Aurora({ coverImage }: { coverImage?: string | null }) {
       )}
       <div className="aurora-layer absolute inset-[-10%] opacity-70"
         style={{ background: "var(--gradient-aurora)", willChange: "transform" }} />
-      <div className="absolute inset-0 hidden sm:block">
+      <div className="absolute inset-0">
         {stars.map((s, i) => (
           <span
             key={i}
@@ -42,6 +42,7 @@ export function Aurora({ coverImage }: { coverImage?: string | null }) {
               height: s.size,
               animationDelay: `${s.delay}s`,
               animationDuration: `${s.dur}s`,
+              boxShadow: "0 0 6px rgba(255,255,255,0.8)",
               willChange: "opacity",
             }}
           />
@@ -55,3 +56,4 @@ export function Aurora({ coverImage }: { coverImage?: string | null }) {
     </div>
   );
 }
+

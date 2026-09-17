@@ -61,12 +61,27 @@ function extractYouTubeId(url: string): string | null {
   }
 }
 
-async function signIfNeeded(admin: any, urlOrPath: string | null): Promise<{ url: string | null; path: string | null }> {
-  if (!urlOrPath) return { url: null, path: null };
-  // If it's already a full URL, return as-is (allows external images too)
-  if (urlOrPath.startsWith("http")) return { url: urlOrPath, path: urlOrPath };
-  const { data } = await admin.storage.from("photos").createSignedUrl(urlOrPath, 60 * 60 * 24 * 7);
-  return { url: data?.signedUrl ?? null, path: urlOrPath };
+// Sign many storage paths in ONE request (previously one round-trip per image,
+// which made the first page load take seconds and sometimes fail).
+async function signMany(admin: any, paths: string[]): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  const toSign = Array.from(new Set(paths.filter((p) => p && !p.startsWith("http"))));
+  if (toSign.length === 0) return map;
+  try {
+    const { data } = await admin.storage.from("photos").createSignedUrls(toSign, 60 * 60 * 24 * 7);
+    for (const d of data ?? []) {
+      if (d?.path && d?.signedUrl) map.set(d.path, d.signedUrl);
+    }
+  } catch {
+    // ignore — page still renders without images
+  }
+  return map;
+}
+
+function resolveUrl(map: Map<string, string>, urlOrPath: string | null): string | null {
+  if (!urlOrPath) return null;
+  if (urlOrPath.startsWith("http")) return urlOrPath;
+  return map.get(urlOrPath) ?? null;
 }
 
 export const getSiteContent = createServerFn({ method: "GET" }).handler(async (): Promise<SiteContent> => {
@@ -76,32 +91,34 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     supabaseAdmin.from("photos").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
     supabaseAdmin.from("tracks").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
   ]);
-  const cover = await signIfNeeded(supabaseAdmin, site?.cover_image_url ?? null);
-  const signedPhotos: PhotoRow[] = await Promise.all(
-    (photos ?? []).map(async (p: any) => {
-      const s = await signIfNeeded(supabaseAdmin, p.url);
-      return {
-        id: p.id,
-        url: s.url ?? "",
-        path: p.url,
-        caption: p.caption,
-        frame: p.frame ?? "polaroid",
-        sort_order: p.sort_order ?? 0,
-      };
-    }),
-  );
+
   const rawTimeline = ((site?.timeline as TimelineItem[]) ?? []);
-  const signedTimeline: TimelineItem[] = await Promise.all(
-    rawTimeline.map(async (t) => {
-      const s = await signIfNeeded(supabaseAdmin, t.image_path ?? null);
-      return { ...t, image_path: t.image_path ?? null, image_url: s.url };
-    }),
-  );
+  const signed = await signMany(supabaseAdmin, [
+    site?.cover_image_url ?? "",
+    ...(photos ?? []).map((p: any) => p.url ?? ""),
+    ...rawTimeline.map((t) => t.image_path ?? ""),
+  ]);
+
+  const signedPhotos: PhotoRow[] = (photos ?? []).map((p: any) => ({
+    id: p.id,
+    url: resolveUrl(signed, p.url) ?? "",
+    path: p.url,
+    caption: p.caption,
+    frame: p.frame ?? "polaroid",
+    sort_order: p.sort_order ?? 0,
+  }));
+
+  const signedTimeline: TimelineItem[] = rawTimeline.map((t) => ({
+    ...t,
+    image_path: t.image_path ?? null,
+    image_url: resolveUrl(signed, t.image_path ?? null),
+  }));
+
   return {
     crush_name: site?.crush_name ?? "Tiên",
     your_name: site?.your_name ?? "Anh",
     messenger_url: site?.messenger_url ?? "https://m.me/",
-    cover_image_url: cover.url,
+    cover_image_url: resolveUrl(signed, site?.cover_image_url ?? null),
     cover_image_path: site?.cover_image_url ?? null,
     welcome_headline: site?.welcome_headline ?? "Gửi Tiên,",
     welcome_subtext: site?.welcome_subtext ?? "",
@@ -122,6 +139,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     })),
   };
 });
+
 
 const siteUpdateSchema = z.object({
   crush_name: z.string().min(1).max(60),

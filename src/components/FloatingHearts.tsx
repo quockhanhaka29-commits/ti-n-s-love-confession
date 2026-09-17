@@ -11,7 +11,7 @@ function seeded(seed: number) {
 
 export function FloatingHearts({ count = 18 }: { count?: number }) {
   const items = useMemo(() => {
-    const n = Math.min(count, 12);
+    const n = count;
     const rnd = seeded(1234567 + n);
     return Array.from({ length: n }, () => ({
       left: +(rnd() * 100).toFixed(3),
@@ -34,6 +34,7 @@ export function FloatingHearts({ count = 18 }: { count?: number }) {
             opacity: h.opacity,
             color: "var(--pink)",
             animation: `rise ${h.dur}s linear ${h.delay}s infinite`,
+            filter: "drop-shadow(0 0 6px oklch(0.7 0.24 355 / 0.6))",
             willChange: "transform, opacity",
           }}
         >
@@ -43,3 +44,4 @@ export function FloatingHearts({ count = 18 }: { count?: number }) {
     </div>
   );
 }
+
