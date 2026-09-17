@@ -1,17 +1,27 @@
 import { useMemo } from "react";
 
+// Deterministic values keep server and client markup identical (no hydration re-render)
+function seeded(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+}
+
 export function FloatingHearts({ count = 18 }: { count?: number }) {
-  const items = useMemo(
-    () =>
-      Array.from({ length: count }, () => ({
-        left: Math.random() * 100,
-        size: 12 + Math.random() * 22,
-        dur: 8 + Math.random() * 10,
-        delay: Math.random() * 6,
-        opacity: 0.4 + Math.random() * 0.5,
-      })),
-    [count],
-  );
+  const items = useMemo(() => {
+    const n = Math.min(count, 12);
+    const rnd = seeded(1234567 + n);
+    return Array.from({ length: n }, () => ({
+      left: +(rnd() * 100).toFixed(3),
+      size: Math.round(12 + rnd() * 22),
+      dur: +(8 + rnd() * 10).toFixed(2),
+      delay: +(rnd() * 6).toFixed(2),
+      opacity: +(0.4 + rnd() * 0.5).toFixed(2),
+    }));
+  }, [count]);
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {items.map((h, i) => (
@@ -24,13 +34,12 @@ export function FloatingHearts({ count = 18 }: { count?: number }) {
             opacity: h.opacity,
             color: "var(--pink)",
             animation: `rise ${h.dur}s linear ${h.delay}s infinite`,
-            filter: "drop-shadow(0 0 6px oklch(0.7 0.24 355 / 0.6))",
+            willChange: "transform, opacity",
           }}
         >
           ♥
         </span>
       ))}
-      <style>{`@keyframes rise { 0%{transform:translateY(0) rotate(0);opacity:0} 20%{opacity:1} 100%{transform:translateY(-110vh) rotate(30deg);opacity:0} }`}</style>
     </div>
   );
 }
